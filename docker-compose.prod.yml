@@ -1,0 +1,51 @@
+version: "3.9"
+services:
+  mongodb:
+    image: mongo
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - $MONGODB_PORT:$MONGODB_PORT
+    volumes:
+      - db:/data/db
+    networks:
+      - backend
+
+  server:
+    depends_on:
+      - mongodb
+    image: pms-server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: ./.env
+    command: yarn start
+    ports:
+      - $NODE_PORT:$NODE_PORT
+
+    networks:
+      - backend
+      - frontend
+
+    client:
+      depends_on:
+        - server
+      image: pms-client
+      build:
+        context: ./client
+        dockerfile: Dockerfile
+      env_file: ./.env
+      command: yarn start
+      ports:
+        - 80:80
+        - 443:443
+      networks:
+        - frontend
+
+volumes:
+  db:
+
+networks:
+  backend:
+  frontend:
