@@ -17,6 +17,8 @@ services:
       - mongodb
     image: sagyam/pms-server
     restart: unless-stopped
+    deploy:
+      replicas: 5
     ports:
       - 5000: 5000
     networks:
@@ -29,6 +31,9 @@ services:
     image: sagyam/pms-client
     restart: unless-stopped
     command: nginx -g 'daemon off;'
+    deploy:
+      replicas: 5
+
     ports:
       - 80:80
       - 443:443
