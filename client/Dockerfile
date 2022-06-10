@@ -3,7 +3,7 @@ FROM node:alpine as build-stage
 
 RUN mkdir -p /usr/src/app/client && chown -R node:node /usr/src/app/client
 
-WORKDIR /usr/src/app/app/client 
+WORKDIR /usr/src/app/client 
 
 COPY package.json yarn.lock ./
 
@@ -25,5 +25,3 @@ FROM nginx:alpine
 COPY --from=build-stage /usr/src/app/client/build /usr/share/nginx/html
 
 EXPOSE 80 443
-
-CMD nginx -g 'daemon off;'

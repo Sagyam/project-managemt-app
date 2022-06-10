@@ -28,20 +28,21 @@ services:
       - backend
       - frontend
 
-    client:
-      depends_on:
-        - server
-      image: pms-client
-      build:
-        context: ./client
-        dockerfile: Dockerfile
-      env_file: ./.env
-      command: yarn start
-      ports:
-        - 80:80
-        - 443:443
-      networks:
-        - frontend
+  client:
+    depends_on:
+      - server
+    image: pms-client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    env_file: ./.env
+    restart: unless-stopped
+    command: nginx -g 'daemon off;'
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - frontend
 
 volumes:
   db:
